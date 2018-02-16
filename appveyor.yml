@@ -1,4 +1,5 @@
 cache:
+ - C:\Users\appveyor\AppData\Local\NuGet\Cache
  - tools -> packages.config
 skip_commits:
   files:
