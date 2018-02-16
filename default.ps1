@@ -19,7 +19,7 @@ task Version {
     $versionJson = exec { GitVersion } | Out-String
     $script:Version = ConvertFrom-Json $versionJson
 
-    $buildNumber = $script:Version.FullSemVer + ".build."  + $env:BUILD_NUMBER
+    $buildNumber = $script:Version.FullSemVer + ".build."  + $env:APPVEYOR_BUILD_NUMBER
 
     $script:buildNumber = $buildNumber
 
@@ -69,5 +69,5 @@ task CI Pack, Release
 task default Build
 
 task PublishVersion -If $env:APPVEYOR {
-    $env:APPVEYOR_BUILD_VERSION = $script:buildNumber
+    Update-AppveyorBuild -Version $script:buildNumber
 }
