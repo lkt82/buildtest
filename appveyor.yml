@@ -1,0 +1,13 @@
+cache:
+ - tools -> packages.config
+skip_commits:
+  files:
+    -  README.md
+    -  LICENSE
+image: Visual Studio 2017
+build_script:
+- ps: .\build.ps1 -target CI -configuration "Release"
+artifacts:
+  - path: .\artifacts\**\*.nupkg
+    name: NuGet
+test: off
