@@ -23,7 +23,7 @@ task Version {
 
     $script:buildNumber = $buildNumber
 
-}, PublishBuildNumber
+}, PublishVersion
 
 
 task Clean {
@@ -50,9 +50,9 @@ task Pack Build, {
 
     exec { & dotnet pack src\Dbc --no-build --no-restore --output "$ARTIFACTS_Dir/lib" /p:Authors="$Authors" /p:Company="$Company" /p:PackageVersion=$script:packageVersion /p:NoPackageAnalysis=true -c $Configuration}
 
-}, PublishArtifacts
+}
 
-task Push -If $env:TEAMCITY_VERSION {
+task Push -If $env:APPVEYOR {
 
     Get-Item "$ARTIFACTS_Dir/lib/*.nupkg" | % {
         $path = $_.FullName
@@ -61,17 +61,13 @@ task Push -If $env:TEAMCITY_VERSION {
 }
 
 
-task Release -If $env:TEAMCITY_VERSION Push, {
+task Release -If $env:APPVEYOR Push, {
 }
 
 task CI Pack, Release
 
 task default Build
 
-task PublishArtifacts -If $env:TEAMCITY_VERSION {
-     Write-Output "##teamcity[publishArtifacts '$ARTIFACTS_Dir']"
-}
-
-task PublishBuildNumber -If $env:TEAMCITY_VERSION {
-     Write-Output "##teamcity[buildNumber '$script:buildNumber']"
+task PublishVersion -If $env:APPVEYOR {
+    $env:APPVEYOR_BUILD_VERSION = $script:buildNumber
 }
