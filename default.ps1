@@ -6,19 +6,11 @@ $ARTIFACTS_Dir = "$BuildRoot\artifacts"
 
 Set-Alias GitVersion ($GitVersion)
 
-$Authors = "Appstract"
-$Company = "KF"
+$Authors = "lkt"
+$Company = "Intelligine"
 
 #tasks
 task Restore -If {$SkipPackageRestore -eq $false} {
-
-    $feedname = "kf"
-
-    $feedExits = exec { nuget sources List } | Select-String $feedname
-
-    if(($env:Nuget_Feed -ne $null) -and ($feedExits -eq $null)) {
-      exec { nuget sources Add -Name $feedname -Source $env:Nuget_Feed }
-    }
 
     exec { & dotnet restore }
 }
@@ -64,7 +56,7 @@ task Push -If $env:TEAMCITY_VERSION {
 
     Get-Item "$ARTIFACTS_Dir/lib/*.nupkg" | % {
         $path = $_.FullName
-        exec { Nuget push $_.FullName $env:Nuget_Api_Key -Source $env:Nuget_Feed_Push }
+        #exec { Nuget push $_.FullName $env:Nuget_Api_Key -Source $env:Nuget_Feed_Push }
     }
 }
 
